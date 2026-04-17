@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Anniversary ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to top, #ff758c, #ff7eb3);
+    color: white;
+    overflow: hidden;
+}
+
+/* START SCREEN */
+#startScreen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+}
+
+/* TEXT */
+#typing {
+    margin-top: 60px;
+    font-size: 26px;
+    min-height: 40px;
+}
+
+/* GAME */
+#clickBtn {
+    margin-top: 20px;
+    font-size: 20px;
+    padding: 15px;
+    border-radius: 50%;
+    background: #ff4d6d;
+    color: white;
+    border: none;
+}
+
+#score {
+    margin-top: 10px;
+}
+
+/* LEVEL 2 */
+.movingLove {
+    position: absolute;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+/* ENDING */
+#ending {
+    display: none;
+    font-size: 35px;
+    margin-top: 40px;
+}
+
+/* LOVE HUJAN */
+.heart {
+    position: fixed;
+    top: -10px;
+    animation: fall linear forwards;
+}
+@keyframes fall {
+    to { transform: translateY(100vh); }
+}
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">
+    <h2>Happy Anniversary Dinda ❤️</h2>
+    <p>2 Juni 💖</p>
+    <button onclick="start()">Mulai</button>
+</div>
+
+<div id="content">
+    <div id="typing"></div>
+
+    <p>
+    Dinda, sejak kamu hadir di hidup aku...<br><br>
+    semuanya jadi lebih berarti.<br><br>
+    Terima kasih sudah bertahan sejauh ini,<br>
+    dan aku mau terus sama kamu ❤️
+    </p>
+
+    <button id="clickBtn" onclick="addScore()">Klik Aku 💖</button>
+    <div id="score">Love: 0</div>
+
+    <div id="ending"></div>
+</div>
+
+<audio id="music" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3">
+</audio>
+
+<script>
+// START
+function start() {
+    document.getElementById("startScreen").style.display = "none";
+
+    const music = document.getElementById("music");
+    music.play().catch(()=>{});
+
+    typingEffect();
+}
+
+// TYPING
+const text = "Dari Daniel untuk Dinda ❤️";
+let i = 0;
+function typingEffect() {
+    if (i < text.length) {
+        document.getElementById("typing").innerHTML += text[i];
+        i++;
+        setTimeout(typingEffect, 60);
+    }
+}
+
+// LEVEL 1
+let score = 0;
+let level2 = false;
+
+function addScore() {
+    score++;
+    document.getElementById("score").innerText = "Love: " + score;
+
+    if (score >= 30 && !level2) {
+        startLevel2();
+    }
+}
+
+// LEVEL 2 (love bergerak)
+function startLevel2() {
+    level2 = true;
+    alert("Level 2: Tangkap Love-nya 💖");
+
+    const btn = document.getElementById("clickBtn");
+    btn.style.display = "none";
+
+    createMovingLove();
+}
+
+function createMovingLove() {
+    const love = document.createElement("div");
+    love.classList.add("movingLove");
+    love.innerText = "❤️";
+
+    moveLove(love);
+
+    love.onclick = () => {
+        score += 5;
+        document.getElementById("score").innerText = "Love: " + score;
+        love.remove();
+
+        if (score >= 100) {
+            ending();
+        } else {
+            createMovingLove();
+        }
+    };
+
+    document.body.appendChild(love);
+}
+
+function moveLove(el) {
+    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.top = Math.random() * window.innerHeight + "px";
+}
+
+// ENDING
+function ending() {
+    document.body.style.background = "black";
+
+    const end = document.getElementById("ending");
+    end.style.display = "block";
+    end.innerHTML =
+    "Happy 4th Anniversary ❤️<br><br>I Love You So Much Dinda 💖<br><br>Dan aku mau terus nambah hari sama kamu...";
+
+    startFireworks();
+    startCounter();
+} 
+
+// LOVE HUJAN
+function rainLove() {
+    const h = document.createElement("div");
+    h.classList.add("heart");
+    h.innerText = "❤️";
+    h.style.left = Math.random() * window.innerWidth + "px";
+    h.style.animationDuration = (Math.random() * 3 + 2) + "s";
+
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(), 5000);
+}
+
+setInterval(rainLove, 300);
+// FIREWORKS
+let fireworkInterval; 
+
+function startFireworks() {
+    fireworkInterval = setInterval(() => {
+        const f = document.createElement("div");
+        f.innerText = "💖";
+        f.style.position = "fixed";
+        f.style.left = Math.random() * window.innerWidth + "px";
+        f.style.top = Math.random() * window.innerHeight + "px";
+        f.style.fontSize = "30px";
+        f.style.opacity = "1";
+        f.style.transition = "all 1s ease-out";
+
+        document.body.appendChild(f);
+
+        setTimeout(() => {
+            f.style.transform = "scale(3)";
+            f.style.opacity = "0";
+        }, 10);
+
+        setTimeout(() => f.remove(), 1000);
+    }, 300);
+
+    // stop setelah 10 detik (biar gak berat)
+    setTimeout(() => clearInterval(fireworkInterval), 10000);
+} 
+
+// COUNTER REAL
+const startDate = new Date("June 2, 2022 00:00:00").getTime();
+
+let counterStarted = false;
+
+function startCounter() {
+    if (counterStarted) return;
+    counterStarted = true;
+
+    const el = document.createElement("div");
+    el.style.marginTop = "20px";
+    el.style.fontSize = "20px";
+    document.getElementById("ending").appendChild(el);
+
+    setInterval(() => {
+        const now = new Date().getTime();
+        const diff = now - startDate;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        el.innerHTML =
+            "Sejak 2 Juni 2022 ❤️<br>" +
+            days + " hari " +
+            hours + " jam " +
+            minutes + " menit " +
+            seconds + " detik";
+    }, 1000);
+} 
+</script>
+
+</body>
+</html>
